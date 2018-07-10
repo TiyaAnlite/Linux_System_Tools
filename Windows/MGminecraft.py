@@ -87,9 +87,43 @@ class MGcore(object):
             MGsave.close()
         os.remove(zipname)
 
+class MGfunction(object):
+    def __init__(self,core):
+        self.MGcore = core
+        self.allfunction = [help","reload","start","save","exit"]
+        print("Type 'help' to help")
+
+    def input(self,comm):
+        comm = comm.split()
+        if comm[0] in self.allfunction:
+            arg = comm[1:]
+            call = "self." + comm[0] + "(" + arg + ")"
+            exitcode = eval(call) #Call need function
+        else:
+            print("[ERROR]Unknown command")
+            exitcode = 1
+    return exitcode
+
+    def help(self,arg):
+        commlist = "Allow command list:\n"
+        for x in self.allfunction:
+            commlist = commlist + x + "\n"
+        print(commlist)
+
+
 def luncher(config):
     print("Minecrfat MG by Tiya Anlite")
     print("Checking up and Loading MG config......")
     config = loadcfg()
     print("Creating and Loading HMCL config......")
     MG = MGcore(config)
+    print("Pull up user space")
+    MGF = MGfunction(MG)
+    while True:
+        comm = input()
+        exitcode = MGF.input(comm)
+        if exitcode == 0:
+            break
+        else:
+            pass
+    exit()
