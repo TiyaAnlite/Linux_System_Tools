@@ -90,7 +90,7 @@ class MGcore(object):
 class MGfunction(object):
     def __init__(self,core):
         self.MGcore = core
-        self.allfunction = [help","reload","start","save","exit"]
+        self.allfunction = ["help","reload","start","save","exit"]
         print("Type 'help' to help")
 
     def input(self,comm):
