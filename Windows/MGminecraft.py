@@ -1,3 +1,4 @@
+import sys
 import os
 import zipfile
 import json
@@ -11,7 +12,7 @@ def loadcfg(): #Frist Start?
         print("[ERROR]Do not find HMCL cconfig")
         print("Maybe you need run HMCL frist")
         print("Exit now..")
-        exit()
+        sys.exit()
     if os.path.isfile("MGconfig.json"):
         print("Loading MG config")
         tempfile = open("MGconfig.json","r")
@@ -173,7 +174,7 @@ class MGfunction(object):
 
     def exit(self,arg):
         print("Exit user CUI")
-        exit()
+        sys.exit()
 
 def luncher():
     print("Minecrfat MG by Tiya Anlite")
