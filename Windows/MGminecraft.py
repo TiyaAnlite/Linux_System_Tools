@@ -77,8 +77,11 @@ class MGcore(object):
                 pass
         return savelist
 
-    def save_zipper(self,save):
-        zipname = save + "-" + time.strftime("%Y%m%d%H%M%S", time.localtime())
+    def save_zipper(self,save,mode="normal"):
+        if mode == "normal":
+            zipname = save + "-" + time.strftime("%Y%m%d%H%M%S", time.localtime())
+        elif mode == "backup":
+            zipname = save + "-undo"
         szip = zipfile.ZipFile(zipname, "w")
         for root, dirs, filesname in os.walk(os.path.join(self.config["location"], save)):
             for files in filesname:
@@ -97,10 +100,32 @@ class MGcore(object):
         os.remove(zipname)
         print("Read a save successful")
 
+    def save_extracter(self,save):
+        azip = zipfile.ZipFile("MGsave.save","r")
+        savelist = azip.namelist()
+        if save in savelist:
+            azip.extract(save)
+            azip.close()
+            bzip = zipfile.ZipFile(save,"r")
+            savename = save.split("-")[0]
+            if savename in self.save_finder(): #Checkout is save in gamedir?
+                self.save_zipper(savename,mode=backup)
+                os.removedirs(os.path.join(self.config["location"], save))
+            for x in bzip.namelist():
+                print("[MGcore]Reading " + x)
+                bzip.extract(x)
+            bzip.close()
+            print("[MGcore]Finish to extract save")
+            
+        else:
+            print("[MGcore][ERROR]Cannot find save in savefile")
+            print("Checkout save name")
+        
+
 class MGfunction(object):
     def __init__(self,core):
         self.MGcore = core
-        self.allfunction = ["help","reload","start","save","exit"]
+        self.allfunction = ["help","reload","start","save","exit","ext","undo"]
         print("Type 'help' to help")
 
     def input(self,comm):
@@ -171,6 +196,12 @@ class MGfunction(object):
         else:
             print("[ERROR]Cannot find this save,check it out")
         return 1, self.MGcore
+
+    def ext(self,arg):
+        pass
+
+    def undo(self,arg):
+        pass
 
     def exit(self,arg):
         print("Exit user CUI")
